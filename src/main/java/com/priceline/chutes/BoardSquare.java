@@ -1,9 +1,10 @@
 package com.priceline.chutes;
 
 public class BoardSquare {
-    private boolean isChute;
-    private boolean isLadder;
-    private int numberSquaresToSkip;
+    private final boolean isChute;
+    private final boolean isLadder;
+    private final int numberSquaresToSkip;
+
     BoardSquare(){
         this(false, false, 0);
     }
@@ -14,12 +15,15 @@ public class BoardSquare {
     }
 
     public int getNumberSquaresToSkip() {
-        if (isLadder) {
-            return numberSquaresToSkip;
+        // Check for invalid configuration: square cannot be both chute and ladder
+        if (isChute && isLadder) {
+            return 0; // No movement if square is mis-configured
+        } else if (isLadder) {
+            return numberSquaresToSkip; // Ladder moves you forward
         } else if (isChute) {
-            return numberSquaresToSkip * -1;
+            return numberSquaresToSkip < 0 ? numberSquaresToSkip : -numberSquaresToSkip; // Chute moves you backward, ensuring negative movement
         } else {
-            return 0;
+            return 0; // Neutral squares don't move you
         }
     }
 }
